@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -38,7 +39,7 @@ import io.github.xdiamond.client.event.ObjectListenerMethodInvokeWrapper;
  */
 public class XDiamondConfigFactoryBean implements ApplicationContextAware, PriorityOrdered, BeanFactoryPostProcessor,
     InitializingBean, FactoryBean<XDiamondConfig>, BeanPostProcessor {
-  private static final Log logger = LogFactory.getLog(XDiamondConfigFactoryBean.class);
+  private static final Logger logger = LoggerFactory.getLogger(XDiamondConfigFactoryBean.class);
   PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}", ":", true);
 
   int order = 0;

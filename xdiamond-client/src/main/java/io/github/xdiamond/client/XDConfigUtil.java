@@ -8,15 +8,10 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * API for app user invoke.
- * e.g
- * Integer taskInterval = XDConfigUtil.get("task.interval",Integer.class);
- * Integer taskInterval2 = XDConfigUtil.get("task.interval",Integer.class,15);
- * String logLevel = XDConfigUtil.get("log.level");
- * String logLevel2 = XDConfigUtil.get("log.level","INFO");
+ * Created with IntelliJ IDEA.
  *
- * @author fxltsbl3855
- *
+ * @author Charlie
+ *         To change this template use File | Settings | File Templates.
  */
 public class XDConfigUtil {
     private static final Logger logger = LoggerFactory.getLogger(XDConfigUtil.class);
@@ -54,9 +49,21 @@ public class XDConfigUtil {
     public static String get(String key,String defaultValueWhenError) {
         try {
             return XDConfigData.getIns().getValue(key);
+        } catch (XDException e) {
+            logger.error(e.getMessage(),e);
+            return defaultValueWhenError;
         }catch (Exception e){
             logger.error("get config error",e);
             return defaultValueWhenError;
+        }
+    }
+
+    public static Map<String,String> getByKeyPrefix(String keyPrefix) {
+        try {
+            return XDConfigData.getIns().getEntryByKeyPrefix(keyPrefix);
+        } catch (XDException e) {
+            logger.error(e.getMessage(),e.getCause());
+            return Collections.emptyMap();
         }
     }
 }

@@ -3,8 +3,8 @@ package io.github.xdiamond.client.exception;
 /**
  * Created with IntelliJ IDEA.
  *
- * @author fxltsbl3855
- *      XDiamond Exception
+ * @author Charlie
+ *         To change this template use File | Settings | File Templates.
  */
 public class XDException extends Exception {
 
@@ -16,7 +16,7 @@ public class XDException extends Exception {
         super(msg);
     }
 
-    public XDException(String msg, Throwable t){
+    public XDException(String msg,Throwable t){
         super(msg,t);
     }
 

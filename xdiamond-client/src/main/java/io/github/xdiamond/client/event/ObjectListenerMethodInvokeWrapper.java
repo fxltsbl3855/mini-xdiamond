@@ -53,6 +53,7 @@ public class ObjectListenerMethodInvokeWrapper extends MethodInvoker {
 						if(!isPrepared()){
 							prepare();
 						}
+						logger.info("===============invoke, key="+event.getKey());
 						invoke();
 					} catch (InvocationTargetException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException e) {
 						logger.error("XDiamond Listener invoke error! event:"

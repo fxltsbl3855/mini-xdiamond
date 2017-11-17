@@ -127,7 +127,6 @@ public class XDiamondConfig {
         List<ResolvedConfigVO> resolvedConfigs = configFuture.get(10, TimeUnit.SECONDS);
         if (configFuture.isSuccess()) {
           loadConfig(resolvedConfigs);
-          XDConfigData.getIns().transData(this.resolvedConfigVOMap);
           logger.info("load config from xdiamond server success. " + toProjectInfoString());
           bShouldLoadLocalConfig = false;
 
@@ -148,7 +147,7 @@ public class XDiamondConfig {
       try {
         List<ResolvedConfigVO> resolvedConfigVOList = loadLocalConfig();
         this.resolvedConfigVOMap = ResolvedConfigVO.listToMap(resolvedConfigVOList);
-        XDConfigData.getIns().transData(this.resolvedConfigVOMap);
+        XDConfigData.getIns().copyData(this.resolvedConfigVOMap);
         logger.info("load xdiamond config " + toProjectInfoString() + " from localConfigPath:"
             + localConfigPath);
 
@@ -210,7 +209,6 @@ public class XDiamondConfig {
   public synchronized void loadConfig(List<ResolvedConfigVO> resolvedConfigVOs) throws IOException {
     // 先保存到本地
     saveLocalConfig(ResolvedConfigVO.toJSONString(resolvedConfigVOs));
-
     // 是否要设置到系统的Properties里
     if (bSyncToSystemProperties) {
       for (ResolvedConfigVO resolvedConfigVO : resolvedConfigVOs) {
@@ -222,11 +220,11 @@ public class XDiamondConfig {
     // 再通知Listener
     Map<String, ResolvedConfigVO> oldResolvedConfigVOMap = this.resolvedConfigVOMap;
     this.resolvedConfigVOMap = ResolvedConfigVO.listToMap(resolvedConfigVOs);
+    XDConfigData.getIns().copyData(this.resolvedConfigVOMap);
     for (ResolvedConfigVO resolvedConfigVO : this.resolvedConfigVOMap.values()) {
       String key = resolvedConfigVO.getConfig().getKey();
       String value = resolvedConfigVO.getConfig().getValue();
       ResolvedConfigVO oldResolvedConfigVO = oldResolvedConfigVOMap.get(key);
-
       if (oldResolvedConfigVO == null) {
         // add event
         notifyListener(new ConfigEvent(key, value, null, EventType.ADD));
@@ -236,7 +234,7 @@ public class XDiamondConfig {
             EventType.UPDATE));
       }
 
-      // here, must delete
+//       here, must delete
       oldResolvedConfigVOMap.remove(key);
     }
 
